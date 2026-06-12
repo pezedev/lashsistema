@@ -1,11 +1,11 @@
 [[redirects]]
   from = "/api/*"
-  to = "https://cilios-server.onrender.com/api/:splat"
+  to = "https://lashsystem.onrender.com/api/:splat"
   status = 200
 
 [[redirects]]
   from = "/uploads/*"
-  to = "https://cilios-server.onrender.com/uploads/:splat"
+  to = "https://lashsystem.onrender.com/uploads/:splat"
   status = 200
 
 [[redirects]]
