@@ -8,8 +8,14 @@ import blockedRouter from './routes/blocked.js'
 import authRouter from './routes/auth.js'
 import clientsRouter from './routes/clients.js'
 
+console.log('✓ Iniciando servidor...')
+
 const app = express()
 const PORT = process.env.PORT || 3001
+
+console.log(`  PORT: ${PORT}`)
+console.log(`  SUPABASE_URL: ${process.env.SUPABASE_URL ? 'configurada' : 'FALTANDO!'}`)
+console.log(`  SUPABASE_ANON_KEY: ${process.env.SUPABASE_ANON_KEY ? 'configurada' : 'FALTANDO!'}`)
 
 app.use(cors())
 app.use(express.json())
@@ -25,7 +31,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
+app.get('/', (req, res) => {
+  res.json({ status: 'running', port: PORT })
+})
+
 app.listen(PORT, () => {
-  console.log(`✓ Servidor rodando em http://localhost:${PORT}`)
-  console.log(`  API: http://localhost:${PORT}/api`)
+  console.log(`✓ Servidor rodando na porta ${PORT}`)
 })
