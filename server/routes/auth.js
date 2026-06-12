@@ -3,6 +3,10 @@ import supabase from '../db.js'
 
 const router = Router()
 
+router.get('/test', (req, res) => {
+  res.json({ ok: true, auth: true })
+})
+
 router.post('/login', async (req, res) => {
   const { username, password } = req.body
 
