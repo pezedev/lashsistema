@@ -35,6 +35,11 @@ app.get('/', (req, res) => {
   res.json({ status: 'running', port: PORT })
 })
 
+// debug: rota auth inline
+app.get('/api/auth/debug', (req, res) => {
+  res.json({ mounted: true })
+})
+
 app.listen(PORT, () => {
   console.log(`✓ Servidor rodando na porta ${PORT}`)
 })
