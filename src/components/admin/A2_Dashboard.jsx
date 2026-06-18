@@ -10,7 +10,14 @@ export default function A2_Dashboard({ onLogout }) {
   const { bookings, loadData } = useBooking()
   const [filter, setFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('confirmed')
+  const [hidePast, setHidePast] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+
+  const clearFilters = () => {
+    setFilter('all')
+    setStatusFilter('confirmed')
+    setHidePast(true)
+  }
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -34,6 +41,11 @@ export default function A2_Dashboard({ onLogout }) {
 
     list.sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
 
+    if (hidePast) {
+      const todayStr = today.toISOString().split('T')[0]
+      list = list.filter((b) => b.date >= todayStr)
+    }
+
     if (filter === 'week') {
       const endOfWeek = new Date(today)
       endOfWeek.setDate(today.getDate() + (7 - today.getDay()))
@@ -42,7 +54,7 @@ export default function A2_Dashboard({ onLogout }) {
     }
 
     return groupByDate(list)
-  }, [bookings, filter, statusFilter])
+  }, [bookings, filter, statusFilter, hidePast])
 
   const stats = useMemo(() => {
     const active = bookings.filter((b) => b.status !== 'cancelled')
@@ -120,9 +132,9 @@ export default function A2_Dashboard({ onLogout }) {
 
         <div className="flex gap-2 mb-4">
           <button
-            onClick={() => setFilter('all')}
+            onClick={() => { setFilter('all'); setHidePast(false) }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              filter === 'all'
+              filter === 'all' && !hidePast
                 ? 'bg-rose text-white'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -130,9 +142,9 @@ export default function A2_Dashboard({ onLogout }) {
             Todos
           </button>
           <button
-            onClick={() => setFilter('week')}
+            onClick={() => { setFilter('week'); setHidePast(false) }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              filter === 'week'
+              filter === 'week' && !hidePast
                 ? 'bg-rose text-white'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -140,8 +152,12 @@ export default function A2_Dashboard({ onLogout }) {
             Esta semana
           </button>
           <button
-            onClick={() => { setFilter('all'); setStatusFilter('confirmed') }}
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white border border-border text-warm-gray hover:border-rose-light"
+            onClick={clearFilters}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              hidePast
+                ? 'bg-rose text-white'
+                : 'bg-white border border-border text-warm-gray hover:border-rose-light'
+            }`}
           >
             Limpar
           </button>
@@ -149,9 +165,9 @@ export default function A2_Dashboard({ onLogout }) {
 
         <div className="flex gap-2 mb-6 flex-wrap">
           <button
-            onClick={() => setStatusFilter('confirmed')}
+            onClick={() => { setStatusFilter('confirmed'); setHidePast(false) }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'confirmed'
+              statusFilter === 'confirmed' && !hidePast
                 ? 'bg-blue-50 text-blue-600 ring-1 ring-blue-300'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -159,9 +175,9 @@ export default function A2_Dashboard({ onLogout }) {
             Confirmados
           </button>
           <button
-            onClick={() => setStatusFilter('completed')}
+            onClick={() => { setStatusFilter('completed'); setHidePast(false) }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'completed'
+              statusFilter === 'completed' && !hidePast
                 ? 'bg-success/20 text-success ring-1 ring-success/30'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -169,9 +185,9 @@ export default function A2_Dashboard({ onLogout }) {
             Concluídos
           </button>
           <button
-            onClick={() => setStatusFilter('cancelled')}
+            onClick={() => { setStatusFilter('cancelled'); setHidePast(false) }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'cancelled'
+              statusFilter === 'cancelled' && !hidePast
                 ? 'bg-error/20 text-error ring-1 ring-error/30'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -179,9 +195,9 @@ export default function A2_Dashboard({ onLogout }) {
             Cancelados
           </button>
           <button
-            onClick={() => setStatusFilter('all')}
+            onClick={() => { setStatusFilter('all'); setHidePast(false) }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'all'
+              statusFilter === 'all' && !hidePast
                 ? 'bg-warm-gray text-white'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
