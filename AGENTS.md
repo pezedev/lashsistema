@@ -66,12 +66,21 @@
 ```
 VITE_PHOTO_URL=http://localhost:3001
 ```
+**Desenvolvimento** (`server/.env`):
+```
+RESEND_API_KEY=re_xxxxx
+FROM_EMAIL=naoresponda@seudominio.com.br
+ADMIN_EMAIL=camille@email.com
+```
 
 **Render (env vars):**
 ```
 SUPABASE_URL=https://tsslcprkrlfhgcedecyv.supabase.co
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzc2xjcHJrcmxmaGdjZWRlY3l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMjE5NjAsImV4cCI6MjA5Njc5Nzk2MH0.AckdssUT8gDtzFcrrJp9Oj-9pfpyhstdDYM_6lZbbco
 PORT=10000
+RESEND_API_KEY=re_xxxxx
+FROM_EMAIL=naoresponda@lashdesigner.com.br
+ADMIN_EMAIL=camille@email.com
 ```
 
 ## Comandos Úteis

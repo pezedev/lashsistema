@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import supabase from '../db.js'
 import { authMiddleware } from '../middleware/auth.js'
+import { notifyBookingConfirmed, notifyBookingCancelledByAdmin, notifyBookingCancelledByClient } from '../mail.js'
 
 const router = Router()
 
@@ -97,6 +98,19 @@ router.post('/', async (req, res) => {
   }).select('*').single()
 
   if (error) return res.status(500).json({ error: error.message })
+
+  const { data: clientData } = await supabase
+    .from('clients')
+    .select('email')
+    .eq('name', name.trim())
+    .maybeSingle()
+
+  if (clientData?.email) {
+    const [y, m, d] = date.split('-')
+    const fmtDate = `${d}/${m}/${y}`
+    notifyBookingConfirmed(name.trim(), clientData.email, serviceName, fmtDate, time, price)
+  }
+
   res.status(201).json(data)
 })
 
@@ -143,7 +157,7 @@ router.post('/:id/client-cancel', async (req, res) => {
 
   const { data: existing } = await supabase
     .from('bookings')
-    .select('id, name')
+    .select('id, name, service, date, time')
     .eq('id', id)
     .maybeSingle()
 
@@ -161,6 +175,17 @@ router.post('/:id/client-cancel', async (req, res) => {
     .eq('id', id)
 
   if (error) return res.status(500).json({ error: error.message })
+
+  const { data: clientData } = await supabase
+    .from('clients')
+    .select('email')
+    .eq('name', existing.name)
+    .maybeSingle()
+
+  const [y, m, d] = existing.date.split('-')
+  const fmtDate = `${d}/${m}/${y}`
+  notifyBookingCancelledByClient(existing.name, clientData?.email, existing.service, fmtDate, existing.time)
+
   res.json({ success: true })
 })
 
@@ -192,7 +217,7 @@ router.post('/:id/cancel', authMiddleware, async (req, res) => {
 
   const { data: existing } = await supabase
     .from('bookings')
-    .select('id')
+    .select('id, name, service, date, time')
     .eq('id', id)
     .maybeSingle()
 
@@ -206,6 +231,19 @@ router.post('/:id/cancel', authMiddleware, async (req, res) => {
     .eq('id', id)
 
   if (error) return res.status(500).json({ error: error.message })
+
+  const { data: clientData } = await supabase
+    .from('clients')
+    .select('email')
+    .eq('name', existing.name)
+    .maybeSingle()
+
+  if (clientData?.email) {
+    const [y, m, d] = existing.date.split('-')
+    const fmtDate = `${d}/${m}/${y}`
+    notifyBookingCancelledByAdmin(existing.name, clientData.email, existing.service, fmtDate, existing.time)
+  }
+
   res.json({ success: true })
 })
 

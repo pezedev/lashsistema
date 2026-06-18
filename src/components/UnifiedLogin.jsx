@@ -137,8 +137,8 @@ function RegisterForm({ onLogin }) {
     e.preventDefault()
     setError('')
 
-    if (!name.trim() || !phone.trim() || !pass.trim()) {
-      setError('Nome, telefone e senha são obrigatórios.')
+    if (!name.trim() || !phone.trim() || !email.trim() || !pass.trim()) {
+      setError('Nome, telefone, e-mail e senha são obrigatórios.')
       return
     }
     if (pass !== confirmPass) {
@@ -152,7 +152,7 @@ function RegisterForm({ onLogin }) {
 
     setLoading(true)
     try {
-      await api.registerClient(name.trim(), phone, email.trim() || null, pass)
+      await api.registerClient(name.trim(), phone, email.trim(), pass)
       onLogin('client', name.trim(), phone)
     } catch (err) {
       setError(err.message || 'Erro ao cadastrar.')
@@ -177,12 +177,15 @@ function RegisterForm({ onLogin }) {
         mask="phone"
       />
       <Input
-        label="E-mail (opcional)"
+        label="E-mail"
         type="email"
         value={email}
         onChange={setEmail}
         placeholder="seu@email.com"
       />
+      <p className="text-xs text-warm-gray-light -mt-2 ml-1">
+        Usaremos para enviar notificações dos seus agendamentos.
+      </p>
       <Input
         label="Senha"
         type="password"

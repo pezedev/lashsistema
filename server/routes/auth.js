@@ -50,8 +50,8 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   const { name, phone, email, password } = req.body
 
-  if (!name || !phone || !password) {
-    return res.status(400).json({ error: 'Nome, telefone e senha são obrigatórios.' })
+  if (!name || !phone || !email || !password) {
+    return res.status(400).json({ error: 'Nome, telefone, e-mail e senha são obrigatórios.' })
   }
 
   const { data: existing } = await supabase
@@ -66,8 +66,8 @@ router.post('/register', async (req, res) => {
 
   const { data, error } = await supabase
     .from('clients')
-    .insert({ name: name.trim(), phone, email: email || null, password })
-    .select('id, name, phone')
+    .insert({ name: name.trim(), phone, email, password })
+    .select('id, name, phone, email')
     .single()
 
   if (error) return res.status(500).json({ error: error.message })

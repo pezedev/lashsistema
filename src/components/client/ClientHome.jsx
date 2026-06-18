@@ -1,19 +1,31 @@
 import { useState, useEffect, useRef } from 'react'
 import Logo from '../ui/Logo'
 import Button from '../ui/Button'
+import Input from '../ui/Input'
+import Modal from '../ui/Modal'
 import * as api from '../../api'
 import { PHOTO_URL } from '../../config'
 
 export default function ClientHome({ clientName, onNewBooking, onViewHistory, onViewProfile, onExit }) {
   const [photo, setPhoto] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [clientId, setClientId] = useState(null)
+  const [clientEmail, setClientEmail] = useState('')
+  const [showEmailPrompt, setShowEmailPrompt] = useState(false)
+  const [emailInput, setEmailInput] = useState('')
+  const [savingEmail, setSavingEmail] = useState(false)
+  const [emailError, setEmailError] = useState('')
   const menuRef = useRef(null)
 
-  useEffect(() => {
+  const loadClient = () => {
     api.fetchClientByName(clientName).then((data) => {
       if (data.photo) setPhoto(data.photo)
+      setClientId(data.id)
+      setClientEmail(data.email || '')
     }).catch(() => {})
-  }, [clientName])
+  }
+
+  useEffect(() => { loadClient() }, [clientName])
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -24,6 +36,34 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
+
+  const handleNewBookingClick = () => {
+    if (!clientEmail && clientId) {
+      setShowEmailPrompt(true)
+    } else {
+      onNewBooking()
+    }
+  }
+
+  const handleSaveEmail = async () => {
+    const trimmed = emailInput.trim()
+    if (!trimmed || !trimmed.includes('@')) {
+      setEmailError('Informe um e-mail válido.')
+      return
+    }
+    setSavingEmail(true)
+    setEmailError('')
+    try {
+      await api.updateClient(clientId, { email: trimmed })
+      setClientEmail(trimmed)
+      setShowEmailPrompt(false)
+      onNewBooking()
+    } catch (err) {
+      setEmailError(err.message)
+    } finally {
+      setSavingEmail(false)
+    }
+  }
 
   return (
     <div className="min-h-dvh bg-cream flex flex-col">
@@ -74,7 +114,7 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
 
           <div className="flex flex-col gap-4">
             <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <Button onClick={onNewBooking} size="lg" className="w-full active:scale-[0.97] transition-transform duration-150">
+              <Button onClick={handleNewBookingClick} size="lg" className="w-full active:scale-[0.97] transition-transform duration-150">
                 Agendar Horário
               </Button>
             </div>
@@ -91,6 +131,45 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
           </div>
         </div>
       </div>
+
+      {showEmailPrompt && (
+        <Modal open={true} onClose={() => setShowEmailPrompt(false)} size="sm">
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-rose-light/30 flex items-center justify-center">
+              <svg className="w-6 h-6 text-rose-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+            </div>
+
+            <h3 className="font-serif text-lg text-graphite mb-2">E-mail necessário</h3>
+            <p className="text-sm text-warm-gray leading-relaxed mb-4">
+              Para continuar, precisamos do seu e-mail. Utilizamos ele para enviar notificações sobre seus agendamentos (confirmação, cancelamentos, lembretes).
+            </p>
+
+            <div className="text-left mb-4">
+              <Input
+                label="Seu melhor e-mail"
+                type="email"
+                value={emailInput}
+                onChange={setEmailInput}
+                placeholder="seu@email.com"
+              />
+              {emailError && (
+                <p className="text-sm text-error mt-2">{emailError}</p>
+              )}
+            </div>
+
+            <div className="flex gap-3">
+              <Button variant="secondary" onClick={() => setShowEmailPrompt(false)} className="flex-1">
+                Agora não
+              </Button>
+              <Button onClick={handleSaveEmail} disabled={savingEmail} className="flex-1">
+                {savingEmail ? 'Salvando...' : 'Salvar e Continuar'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
