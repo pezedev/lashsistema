@@ -22,6 +22,9 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
       if (data.photo) setPhoto(data.photo)
       setClientId(data.id)
       setClientEmail(data.email || '')
+      if (!data.email && data.id) {
+        setShowEmailPrompt(true)
+      }
     }).catch(() => {})
   }
 
@@ -133,7 +136,7 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
       </div>
 
       {showEmailPrompt && (
-        <Modal open={true} onClose={() => setShowEmailPrompt(false)} size="sm">
+        <Modal open={true} onClose={() => {}} size="sm">
           <div className="text-center">
             <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-rose-light/30 flex items-center justify-center">
               <svg className="w-6 h-6 text-rose-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -141,9 +144,9 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
               </svg>
             </div>
 
-            <h3 className="font-serif text-lg text-graphite mb-2">E-mail necessário</h3>
+            <h3 className="font-serif text-lg text-graphite mb-2">E-mail obrigatório</h3>
             <p className="text-sm text-warm-gray leading-relaxed mb-4">
-              Para continuar, precisamos do seu e-mail. Utilizamos ele para enviar notificações sobre seus agendamentos (confirmação, cancelamentos, lembretes).
+              Para usar o sistema, precisamos do seu e-mail. Utilizamos ele para enviar notificações sobre seus agendamentos (confirmação, cancelamentos, lembretes).
             </p>
 
             <div className="text-left mb-4">
@@ -159,14 +162,9 @@ export default function ClientHome({ clientName, onNewBooking, onViewHistory, on
               )}
             </div>
 
-            <div className="flex gap-3">
-              <Button variant="secondary" onClick={() => setShowEmailPrompt(false)} className="flex-1">
-                Agora não
-              </Button>
-              <Button onClick={handleSaveEmail} disabled={savingEmail} className="flex-1">
-                {savingEmail ? 'Salvando...' : 'Salvar e Continuar'}
-              </Button>
-            </div>
+            <Button onClick={handleSaveEmail} disabled={savingEmail} size="lg" className="w-full">
+              {savingEmail ? 'Salvando...' : 'Salvar e Continuar'}
+            </Button>
           </div>
         </Modal>
       )}
