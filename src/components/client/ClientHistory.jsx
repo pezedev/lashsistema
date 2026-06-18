@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from 'react'
 import * as api from '../../api'
-import A6_ConfirmModal from '../admin/A6_ConfirmModal'
+import Modal from '../ui/Modal'
 
 export default function ClientHistory({ clientName, onBack, onExit }) {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [cancelTarget, setCancelTarget] = useState(null)
+  const [cancelReason, setCancelReason] = useState('')
 
   const load = async () => {
     setLoading(true)
@@ -39,11 +40,13 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
   const handleCancel = async () => {
     if (!cancelTarget) return
     try {
-      await api.clientCancelBooking(cancelTarget.id, clientName)
+      await api.clientCancelBooking(cancelTarget.id, clientName, cancelReason)
       setCancelTarget(null)
+      setCancelReason('')
       load()
     } catch {
       setCancelTarget(null)
+      setCancelReason('')
     }
   }
 
@@ -196,6 +199,9 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
                             <span>{b.time}</span>
                           </div>
                           <p className="text-sm text-warm-gray-light">{b.price > 0 ? `R$ ${b.price},00` : 'Consulte'}</p>
+                          {b.status === 'cancelled' && b.cancel_reason && (
+                            <p className="text-xs text-warm-gray mt-1 italic">Motivo: {b.cancel_reason}</p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -208,14 +214,50 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
       </main>
 
       {cancelTarget && (
-        <A6_ConfirmModal
-          title="Cancelar Agendamento?"
-          message={`Cancelar ${cancelTarget.service} do dia ${fmtDate(cancelTarget.date)} às ${cancelTarget.time}?`}
-          confirmLabel="Sim, Cancelar"
-          variant="danger"
-          onConfirm={handleCancel}
-          onCancel={() => setCancelTarget(null)}
-        />
+        <Modal open={true} onClose={() => { setCancelTarget(null); setCancelReason('') }} size="sm">
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
+              <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            </div>
+
+            <h3 className="font-serif text-lg text-graphite mb-2">Cancelar Agendamento?</h3>
+            <p className="text-sm text-warm-gray leading-relaxed mb-4">
+              {cancelTarget.service} do dia {fmtDate(cancelTarget.date)} às {cancelTarget.time}
+            </p>
+
+            <textarea
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              placeholder="Motivo do cancelamento..."
+              className="w-full border border-border rounded-xl px-4 py-3 text-sm text-graphite bg-cream/50 resize-none focus:outline-none focus:ring-2 focus:ring-rose-light/50 mb-4"
+              rows={3}
+            />
+
+            {cancelTarget.payment_status === 'partial' && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
+                <p className="text-xs text-amber-800 font-medium">Você pagou o sinal de 50%</p>
+                <p className="text-xs text-amber-600 mt-0.5">Não há reembolso para cancelamentos.</p>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setCancelTarget(null); setCancelReason('') }}
+                className="flex-1 py-3 rounded-xl text-sm font-medium text-warm-gray hover:text-graphite border border-border transition-all"
+              >
+                Voltar
+              </button>
+              <button
+                onClick={handleCancel}
+                className="flex-1 py-3 rounded-xl text-sm font-medium bg-error text-white hover:opacity-90 transition-all"
+              >
+                Sim, Cancelar
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   )

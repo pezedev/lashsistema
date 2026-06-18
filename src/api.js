@@ -34,18 +34,21 @@ export async function fetchWeekBookings() {
   return request('/bookings/week')
 }
 
-export async function cancelBooking(id) {
-  return request(`/bookings/${id}/cancel`, { method: 'POST' })
+export async function cancelBooking(id, reason = '') {
+  return request(`/bookings/${id}/cancel`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  })
 }
 
 export async function fetchClientBookings(name) {
   return request(`/bookings/client?name=${encodeURIComponent(name)}`)
 }
 
-export async function clientCancelBooking(id, name) {
+export async function clientCancelBooking(id, name, reason = '') {
   return request(`/bookings/${id}/client-cancel`, {
     method: 'POST',
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, reason }),
   })
 }
 

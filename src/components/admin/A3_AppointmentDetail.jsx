@@ -11,6 +11,7 @@ export default function A3_AppointmentDetail() {
   const { goTo, selectedAppointment } = useAdmin()
   const [showReschedule, setShowReschedule] = useState(false)
   const [showCancel, setShowCancel] = useState(false)
+  const [cancelReason, setCancelReason] = useState('')
   const [showComplete, setShowComplete] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [clientPhoto, setClientPhoto] = useState('')
@@ -38,23 +39,10 @@ export default function A3_AppointmentDetail() {
   const handleCancel = async () => {
     setActionLoading(true)
     try {
-      await api.cancelBooking(selectedAppointment.id)
+      await api.cancelBooking(selectedAppointment.id, cancelReason)
       triggerUpdate()
       setShowCancel(false)
-      goTo('dashboard')
-    } catch {
-      setShowCancel(false)
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleCancelAndNotify = async () => {
-    setActionLoading(true)
-    try {
-      await api.cancelBooking(selectedAppointment.id)
-      triggerUpdate()
-      setShowCancel(false)
+      setCancelReason('')
       goTo('dashboard')
     } catch {
       setShowCancel(false)
@@ -82,8 +70,6 @@ export default function A3_AppointmentDetail() {
     setShowReschedule(false)
     goTo('dashboard')
   }
-
-  const cancelMessage = `Olá ${selectedAppointment.name}, infelizmente precisei cancelar seu agendamento. Peço desculpas pelo transtorno. Se desejar, podemos remarcar um novo horário.\n\nAcesse o link abaixo e confira os horários disponíveis:\nhttps://lashsystem.onrender.com`
 
   return (
     <div className="min-h-dvh bg-cream">
@@ -217,8 +203,13 @@ export default function A3_AppointmentDetail() {
           <div className="h-px bg-border" />
 
           {isCancelled ? (
-            <div className="bg-error/5 rounded-xl p-4 text-center border border-error/10">
-              <p className="text-sm text-error">Este agendamento foi cancelado.</p>
+            <div className="bg-error/5 rounded-xl p-4 border border-error/10">
+              <p className="text-sm text-error text-center">Este agendamento foi cancelado.</p>
+              {selectedAppointment.cancel_reason && (
+                <p className="text-xs text-warm-gray mt-2 text-center">
+                  Motivo: {selectedAppointment.cancel_reason}
+                </p>
+              )}
             </div>
           ) : isCompleted ? (
             <div className="bg-success/5 rounded-xl p-4 text-center border border-success/10">
@@ -275,36 +266,39 @@ export default function A3_AppointmentDetail() {
               </svg>
             </div>
 
-            <h3 className="font-serif text-lg text-graphite mb-2"> Cancelar Agendamento?</h3>
-            <p className="text-sm text-warm-gray leading-relaxed mb-6">
-              O status será alterado para <strong>Cancelado</strong> e o agendamento sairá da lista de ativos.
+            <h3 className="font-serif text-lg text-graphite mb-2">Cancelar Agendamento?</h3>
+            <p className="text-sm text-warm-gray leading-relaxed mb-4">
+              O agendamento sairá da lista de ativos.
             </p>
 
-            <div className="flex flex-col gap-3">
-              <a
-                href={`https://wa.me/55${selectedAppointment.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(cancelMessage)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleCancelAndNotify}
-                className="w-full py-3 rounded-xl text-sm font-medium bg-success text-white hover:opacity-90 transition-all text-center flex items-center justify-center gap-2"
+            <textarea
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              placeholder="Motivo do cancelamento..."
+              className="w-full border border-border rounded-xl px-4 py-3 text-sm text-graphite bg-cream/50 resize-none focus:outline-none focus:ring-2 focus:ring-rose-light/50 mb-4"
+              rows={3}
+            />
+
+            {selectedAppointment.payment_status === 'partial' && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
+                <p className="text-xs text-amber-800 font-medium">Sinal de 50% já pago</p>
+                <p className="text-xs text-amber-600 mt-0.5">Este valor não será reembolsado.</p>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setShowCancel(false); setCancelReason('') }}
+                className="flex-1 py-3 rounded-xl text-sm font-medium text-warm-gray hover:text-graphite border border-border transition-all"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Cancelar e Notificar via WhatsApp
-              </a>
+                Voltar
+              </button>
               <button
                 onClick={handleCancel}
                 disabled={actionLoading}
-                className="w-full py-3 rounded-xl text-sm font-medium bg-error text-white hover:opacity-90 disabled:opacity-50 transition-all"
+                className="flex-1 py-3 rounded-xl text-sm font-medium bg-error text-white hover:opacity-90 disabled:opacity-50 transition-all"
               >
-                {actionLoading ? 'Cancelando...' : 'Cancelar sem notificar'}
-              </button>
-              <button
-                onClick={() => setShowCancel(false)}
-                className="text-sm text-warm-gray-light hover:text-graphite transition-colors py-1"
-              >
-                Voltar
+                {actionLoading ? 'Cancelando...' : 'Cancelar'}
               </button>
             </div>
           </div>
