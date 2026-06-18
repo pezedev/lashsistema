@@ -58,10 +58,19 @@ export default function UnifiedLogin({ onLogin }) {
         </div>
       </div>
 
-      <div className="text-center pb-6 relative">
+      <div className="text-center pb-6 relative space-y-1">
         <p className="text-warm-gray-light text-xs">
-          Camille Santos Beauty — Atendimento em casa
+          Camille Santos Beauty
         </p>
+        <div className="flex items-center justify-center gap-3 text-xs text-warm-gray-light">
+          <a href="https://wa.me/5566996024671" target="_blank" rel="noopener noreferrer" className="hover:text-rose-dark transition-colors">
+            (66) 99602-4671
+          </a>
+          <span>·</span>
+          <a href="https://instagram.com/camillesantos_beauty" target="_blank" rel="noopener noreferrer" className="hover:text-rose-dark transition-colors">
+            @camillesantos_beauty
+          </a>
+        </div>
       </div>
     </div>
   )

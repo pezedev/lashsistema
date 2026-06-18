@@ -131,7 +131,7 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
                             <span>{fmtDate(b.date)}</span>
                             <span>{b.time}</span>
                           </div>
-                          <p className="text-sm text-warm-gray-light mt-1">R$ {b.price},00</p>
+                          <p className="text-sm text-warm-gray-light mt-1">{b.price > 0 ? `R$ ${b.price},00` : 'Consulte'}</p>
                         </div>
                         <button
                           onClick={() => setCancelTarget(b)}
@@ -173,7 +173,7 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
                             <span>{fmtDate(b.date)}</span>
                             <span>{b.time}</span>
                           </div>
-                          <p className="text-sm text-warm-gray-light">R$ {b.price},00</p>
+                          <p className="text-sm text-warm-gray-light">{b.price > 0 ? `R$ ${b.price},00` : 'Consulte'}</p>
                         </div>
                       </div>
                     </div>

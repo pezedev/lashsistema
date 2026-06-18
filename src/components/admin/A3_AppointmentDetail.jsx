@@ -191,7 +191,7 @@ export default function A3_AppointmentDetail() {
                 Valor
               </span>
               <p className="font-serif text-lg text-rose-dark mt-1 font-semibold">
-                R$ {selectedAppointment.price},00
+                {selectedAppointment.price > 0 ? `R$ ${selectedAppointment.price},00` : 'Consulte'}
               </p>
             </div>
           </div>

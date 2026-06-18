@@ -58,7 +58,7 @@ export default function T5_Review({ onBack }) {
               Valor Total
             </span>
             <span className="font-serif text-2xl text-rose-dark font-semibold">
-              R$ {booking.service?.price},00
+              {booking.service?.price > 0 ? `R$ ${booking.service?.price},00` : 'Consulte'}
             </span>
           </div>
         </div>

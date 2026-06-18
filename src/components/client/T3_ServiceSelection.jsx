@@ -93,7 +93,7 @@ export default function T3_ServiceSelection({ booking, onUpdate, onNext, onBack 
                         isSelected ? 'text-rose-dark' : 'text-warm-gray'
                       }`}
                     >
-                      R$ {service.price}
+                      {service.price > 0 ? `R$ ${service.price}` : 'Consulte'}
                     </span>
                   </div>
                 </div>

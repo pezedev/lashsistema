@@ -24,9 +24,14 @@ export default function T1_Welcome({ onStart }) {
         </div>
       </div>
 
-      <p className="text-warm-gray-light text-xs text-center mt-8">
-        Camille Santos Beauty — Atendimento em casa
-      </p>
+      <div className="text-center mt-8 space-y-1">
+        <p className="text-warm-gray-light text-xs">Camille Santos Beauty</p>
+        <div className="flex items-center justify-center gap-3 text-xs text-warm-gray-light">
+          <a href="https://wa.me/5566996024671" target="_blank" rel="noopener noreferrer" className="hover:text-rose-dark">(66) 99602-4671</a>
+          <span>·</span>
+          <a href="https://instagram.com/camillesantos_beauty" target="_blank" rel="noopener noreferrer" className="hover:text-rose-dark">@camillesantos_beauty</a>
+        </div>
+      </div>
     </div>
   )
 }

@@ -28,7 +28,7 @@ export default function T6_Confirmation({ onViewHistory, onExit }) {
             {formatDate(booking.date)} às {booking.time}
           </p>
           <p className="text-rose-dark font-serif text-xl font-semibold">
-            R$ {booking.service?.price},00
+            {booking.service?.price > 0 ? `R$ ${booking.service?.price},00` : 'Consulte'}
           </p>
         </div>
 

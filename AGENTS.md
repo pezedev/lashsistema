@@ -95,6 +95,10 @@ npm start            # Roda servidor Express (produção local)
 - Código: `git add . && git commit -m "..." && git push` → Render + Netlify auto-deploy
 - Banco: SQL no Supabase Dashboard
 
+## Contato
+- **Instagram:** @camillesantos_beauty
+- **WhatsApp:** (66) 99602-4671
+
 ## Links
 - **Netlify:** https://app.netlify.com
 - **Render:** https://dashboard.render.com

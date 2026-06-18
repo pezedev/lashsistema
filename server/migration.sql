@@ -46,17 +46,20 @@ ON CONFLICT (username) DO NOTHING;
 
 -- Inserir serviços padrão
 INSERT INTO services (name, description, duration, price) VALUES
-  ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar com naturalidade.', '1h30', 120),
-  ('Volume Russo', 'Técnica clássica que proporciona volume máximo com fios ultrafinos e sedosos.', '2h', 150),
-  ('Mega Volume', 'Extremo volume e glamour para ocasiões especiais. Fios extra finos em leques.', '2h30', 180),
-  ('Manutenção de Cílios', 'Renovação e ajuste dos fios existentes para manter o visual impecável.', '1h', 80),
-  ('Remoção Completa', 'Remoção profissional e segura dos fios sem danificar os cílios naturais.', '1h', 60),
-  ('Design de Sobrancelha', 'Modelagem personalizada que valoriza o formato do seu rosto.', '1h', 50),
-  ('Brow Lamination', 'Henação e alinhamento dos fios para sobrancelhas perfeitas.', '1h', 70),
-  ('Limpeza de Pele', 'Limpeza profunda com extração e máscara revitalizante.', '1h30', 90),
-  ('Nanolips', 'Preenchimento labial sutil com ácido hialurônico.', '1h', 180),
-  ('Glow Lips', 'Hidratação e revitalização labial com efeito glow.', '1h', 60),
-  ('Dermaplaning', 'Esfoliação facial com lâmina para remoção de pelos e células mortas.', '1h', 100)
+  ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar com naturalidade.', '2h', 220),
+  ('Volume Capping', 'Técnica que intercala fios mais longos para um efeito leque diferenciado.', '2h', 220),
+  ('Volume Efeito Rímel', 'Alongamento com efeito curvado que lembra o curvex.', '2h', 220),
+  ('Volume Egípcio', 'Técnica que alonga o olhar com fios inclinados e efeito felino.', '2h', 220),
+  ('Volume Brasileiro Marrom', 'Mesmo volume brasileiro com fios marrons para um visual mais suave.', '2h', 220),
+  ('Volume Fox', 'Efeito aberto e alongado que abre o olhar como uma raposa.', '2h', 220),
+  ('Manutenção de Cílios', 'Renovação e ajuste dos fios existentes para manter o visual impecável.', '1h', 120),
+  ('Design de Sobrancelha', 'Modelagem personalizada que valoriza o formato do seu rosto.', '30min', 50),
+  ('Design de Sobrancelha com Henna', 'Modelagem + henna para sobrancelhas mais definidas.', '1h', 75),
+  ('Brow Lamination', 'Alinhamento e fixação dos fios para sobrancelhas perfeitas.', '1h', 150),
+  ('Glow Lips', 'Microagulhamento labial para lábios hidratados e volumosos.', '1h', 130),
+  ('Nanolips', 'Micro labial / Revitalização labial. Valor definido após avaliação.', '1h', 0),
+  ('Dermaplaning', 'Esfoliação facial com lâmina para remoção de pelos e células mortas.', '1h', 130),
+  ('Limpeza de Pele Profunda', 'Limpeza profunda com extração e máscara revitalizante.', '1h30', 150)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
