@@ -234,6 +234,11 @@ export default function A2_Dashboard({ onLogout }) {
                                 Concluído
                               </span>
                             )}
+                            {appt.payment_status === 'partial' && appt.status === 'confirmed' && (
+                              <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">
+                                Sinal
+                              </span>
+                            )}
                           </div>
                           <p className={`text-sm truncate ${appt.status === 'cancelled' ? 'text-warm-gray-light' : 'text-warm-gray'}`}>
                             {appt.service}

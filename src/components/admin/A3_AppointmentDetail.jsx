@@ -194,6 +194,24 @@ export default function A3_AppointmentDetail() {
                 {selectedAppointment.price > 0 ? `R$ ${selectedAppointment.price},00` : 'Consulte'}
               </p>
             </div>
+            <div>
+              <span className="text-xs uppercase tracking-wider text-warm-gray-light font-medium">
+                Pagamento
+              </span>
+              <p className="mt-1">
+                {selectedAppointment.payment_status === 'partial' ? (
+                  <span className="inline-flex items-center gap-1.5 text-sm text-amber-700 bg-amber-50 px-3 py-1 rounded-full font-medium ring-1 ring-amber-200">
+                    Sinal pago (50%) — Restante pendente
+                  </span>
+                ) : selectedAppointment.payment_status === 'paid' ? (
+                  <span className="inline-flex items-center gap-1.5 text-sm text-success bg-success/10 px-3 py-1 rounded-full font-medium">
+                    Pago
+                  </span>
+                ) : (
+                  <span className="text-sm text-warm-gray-light">Pendente</span>
+                )}
+              </p>
+            </div>
           </div>
 
           <div className="h-px bg-border" />

@@ -95,6 +95,7 @@ router.post('/', async (req, res) => {
     price,
     date,
     time,
+    payment_status: 'partial',
   }).select('*').single()
 
   if (error) return res.status(500).json({ error: error.message })

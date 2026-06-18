@@ -46,20 +46,21 @@ ON CONFLICT (username) DO NOTHING;
 
 -- Inserir serviços padrão
 INSERT INTO services (name, description, duration, price) VALUES
-  ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar com naturalidade.', '2h', 220),
-  ('Volume Capping', 'Técnica que intercala fios mais longos para um efeito leque diferenciado.', '2h', 220),
-  ('Volume Efeito Rímel', 'Alongamento com efeito curvado que lembra o curvex.', '2h', 220),
-  ('Volume Egípcio', 'Técnica que alonga o olhar com fios inclinados e efeito felino.', '2h', 220),
-  ('Volume Brasileiro Marrom', 'Mesmo volume brasileiro com fios marrons para um visual mais suave.', '2h', 220),
-  ('Volume Fox', 'Efeito aberto e alongado que abre o olhar como uma raposa.', '2h', 220),
-  ('Manutenção de Cílios', 'Renovação e ajuste dos fios existentes para manter o visual impecável.', '1h', 120),
-  ('Design de Sobrancelha', 'Modelagem personalizada que valoriza o formato do seu rosto.', '30min', 50),
-  ('Design de Sobrancelha com Henna', 'Modelagem + henna para sobrancelhas mais definidas.', '1h', 75),
-  ('Brow Lamination', 'Alinhamento e fixação dos fios para sobrancelhas perfeitas.', '1h', 150),
-  ('Glow Lips', 'Microagulhamento labial para lábios hidratados e volumosos.', '1h', 130),
-  ('Nanolips', 'Micro labial / Revitalização labial. Valor definido após avaliação.', '1h', 0),
-  ('Dermaplaning', 'Esfoliação facial com lâmina para remoção de pelos e células mortas.', '1h', 130),
-  ('Limpeza de Pele Profunda', 'Limpeza profunda com extração e máscara revitalizante.', '1h30', 150)
+  ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar.', '1h30', 220),
+  ('Volume Capping', 'Técnica que intercala fios mais longos para efeito leque.', '1h30', 220),
+  ('Volume Efeito Rímel', 'Alongamento com efeito curvado que lembra curvex.', '1h30', 220),
+  ('Volume Egípcio', 'Alongamento com fios inclinados e efeito felino.', '1h30', 220),
+  ('Volume Brasileiro Marrom', 'Volume brasileiro com fios marrons.', '1h30', 220),
+  ('Volume Fox', 'Efeito aberto e alongado que abre o olhar.', '1h30', 220),
+  ('Manutenção de Cílios', 'Renovação dos fios existentes.', '1h', 120),
+  ('Remoção de Cílios', 'Remoção profissional e segura dos fios.', '1h30', 60),
+  ('Design de Sobrancelha', 'Modelagem personalizada.', '30min', 50),
+  ('Design de Sobrancelha com Henna', 'Modelagem + henna.', '1h', 75),
+  ('Brow Lamination', 'Alinhamento e fixação dos fios.', '1h', 150),
+  ('Glow Lips', 'Microagulhamento labial.', '1h', 130),
+  ('Nanolips', 'Micro labial / Revitalização. Valor após avaliação.', '1h', 0),
+  ('Dermaplaning', 'Esfoliação facial com lâmina.', '1h', 130),
+  ('Limpeza de Pele Profunda', 'Limpeza com extração e máscara.', '1h30', 150)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
@@ -86,5 +87,6 @@ INSERT INTO working_hours (day_of_week, open_time, close_time, is_off) VALUES
   (6, '08:00', '16:00', false)  -- Sábado
 ON CONFLICT (day_of_week) DO NOTHING;
 
--- Adicionar coluna cancelled_by na tabela bookings
+-- Adicionar colunas na tabela bookings
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS cancelled_by TEXT DEFAULT NULL;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'pending';

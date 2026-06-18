@@ -5,6 +5,8 @@ import { formatDate } from '../../lib/utils'
 
 export default function T5_Review({ onBack }) {
   const { booking, confirmBooking } = useBooking()
+  const total = booking.service?.price || 0
+  const half = Math.ceil(total / 2)
 
   return (
     <div className="min-h-dvh flex flex-col px-6 py-10 animate-slide-up">
@@ -53,23 +55,42 @@ export default function T5_Review({ onBack }) {
 
           <div className="h-px bg-border" />
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs uppercase tracking-wider text-warm-gray-light font-medium">
-              Valor Total
-            </span>
-            <span className="font-serif text-2xl text-rose-dark font-semibold">
-              {booking.service?.price > 0 ? `R$ ${booking.service?.price},00` : 'Consulte'}
-            </span>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-wider text-warm-gray-light font-medium">
+                Valor Total
+              </span>
+              <span className="font-serif text-2xl text-rose-dark font-semibold">
+                {total > 0 ? `R$ ${total},00` : 'Consulte'}
+              </span>
+            </div>
+
+            {total > 0 && (
+              <div className="bg-rose-light/15 rounded-xl p-4 space-y-2 border border-rose-light/30">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-warm-gray">Sinal (50%)</span>
+                  <span className="font-medium text-graphite">R$ {half},00</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-warm-gray">Restante (50%)</span>
+                  <span className="font-medium text-graphite">R$ {total - half},00</span>
+                </div>
+                <div className="h-px bg-rose-light/40 my-1" />
+                <p className="text-xs text-warm-gray-light text-center">
+                  O sinal de 50% é pago no momento da confirmação. O restante é pago após o procedimento.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
         <p className="text-xs text-warm-gray-light text-center mt-6 mb-8">
           Ao confirmar, você aceita os termos de agendamento
-          <br />e receberá a confirmação via WhatsApp.
+          <br />e receberá a confirmação via e-mail.
         </p>
 
         <Button onClick={confirmBooking} size="lg" className="w-full">
-          Confirmar Agendamento
+          {total > 0 ? `Confirmar e Pagar R$ ${half},00` : 'Confirmar Agendamento'}
         </Button>
       </div>
     </div>

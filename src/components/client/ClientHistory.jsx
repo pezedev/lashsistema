@@ -61,6 +61,18 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
     }
   }
 
+  const paymentLabel = (b) => {
+    if (b.payment_status === 'partial') return 'Sinal pago'
+    if (b.payment_status === 'paid') return 'Pago'
+    return ''
+  }
+
+  const paymentColor = (b) => {
+    if (b.payment_status === 'partial') return 'text-amber-700 bg-amber-50'
+    if (b.payment_status === 'paid') return 'text-success bg-success/10'
+    return ''
+  }
+
   return (
     <div className="min-h-dvh bg-cream">
       <header className="sticky top-0 z-30 bg-cream/95 backdrop-blur-sm border-b border-border">
@@ -126,6 +138,11 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
                             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusTag(b.status)}`}>
                               Confirmado
                             </span>
+                            {paymentLabel(b) && (
+                              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${paymentColor(b)}`}>
+                                {paymentLabel(b)}
+                              </span>
+                            )}
                           </div>
                           <div className="flex items-center gap-4 mt-2 text-sm text-warm-gray">
                             <span>{fmtDate(b.date)}</span>
@@ -168,6 +185,11 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
                             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusTag(b.status)}`}>
                               {b.status === 'cancelled' ? 'Cancelado' : b.status === 'completed' ? 'Concluído' : 'Realizado'}
                             </span>
+                            {paymentLabel(b) && (
+                              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${paymentColor(b)}`}>
+                                {paymentLabel(b)}
+                              </span>
+                            )}
                           </div>
                           <div className="flex items-center gap-4 mt-1 text-sm text-warm-gray">
                             <span>{fmtDate(b.date)}</span>
