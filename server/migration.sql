@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS services (
   name TEXT NOT NULL,
   description TEXT NOT NULL,
   duration TEXT NOT NULL,
-  price INTEGER NOT NULL
+  price INTEGER NOT NULL,
+  category TEXT DEFAULT 'outros'
 );
 
 -- Tabela de agendamentos
@@ -45,22 +46,22 @@ VALUES ('camille', 'lash2025')
 ON CONFLICT (username) DO NOTHING;
 
 -- Inserir serviços padrão
-INSERT INTO services (name, description, duration, price) VALUES
-  ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar.', '1h30', 220),
-  ('Volume Capping', 'Técnica que intercala fios mais longos para efeito leque.', '1h30', 220),
-  ('Volume Efeito Rímel', 'Alongamento com efeito curvado que lembra curvex.', '1h30', 220),
-  ('Volume Egípcio', 'Alongamento com fios inclinados e efeito felino.', '1h30', 220),
-  ('Volume Brasileiro Marrom', 'Volume brasileiro com fios marrons.', '1h30', 220),
-  ('Volume Fox', 'Efeito aberto e alongado que abre o olhar.', '1h30', 220),
-  ('Manutenção de Cílios', 'Renovação dos fios existentes.', '1h', 120),
-  ('Remoção de Cílios', 'Remoção profissional e segura dos fios.', '1h30', 60),
-  ('Design de Sobrancelha', 'Modelagem personalizada.', '30min', 50),
-  ('Design de Sobrancelha com Henna', 'Modelagem + henna.', '1h', 75),
-  ('Brow Lamination', 'Alinhamento e fixação dos fios.', '1h', 150),
-  ('Glow Lips', 'Microagulhamento labial.', '1h', 130),
-  ('Nanolips', 'Micro labial / Revitalização. Valor após avaliação.', '1h', 0),
-  ('Dermaplaning', 'Esfoliação facial com lâmina.', '1h', 130),
-  ('Limpeza de Pele Profunda', 'Limpeza com extração e máscara.', '1h30', 150)
+INSERT INTO services (name, description, duration, price, category) VALUES
+  ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar.', '1h30', 220, 'cílios'),
+  ('Volume Capping', 'Técnica que intercala fios mais longos para efeito leque.', '1h30', 220, 'cílios'),
+  ('Volume Efeito Rímel', 'Alongamento com efeito curvado que lembra curvex.', '1h30', 220, 'cílios'),
+  ('Volume Egípcio', 'Alongamento com fios inclinados e efeito felino.', '1h30', 220, 'cílios'),
+  ('Volume Brasileiro Marrom', 'Volume brasileiro com fios marrons.', '1h30', 220, 'cílios'),
+  ('Volume Fox', 'Efeito aberto e alongado que abre o olhar.', '1h30', 220, 'cílios'),
+  ('Manutenção de Cílios', 'Renovação dos fios existentes.', '1h', 120, 'cílios'),
+  ('Remoção de Cílios', 'Remoção profissional e segura dos fios.', '1h30', 60, 'cílios'),
+  ('Design de Sobrancelha', 'Modelagem personalizada.', '30min', 50, 'outros'),
+  ('Design de Sobrancelha com Henna', 'Modelagem + henna.', '1h', 75, 'outros'),
+  ('Brow Lamination', 'Alinhamento e fixação dos fios.', '1h', 150, 'outros'),
+  ('Glow Lips', 'Microagulhamento labial.', '1h', 130, 'outros'),
+  ('Nanolips', 'Micro labial / Revitalização. Valor após avaliação.', '1h', 0, 'outros'),
+  ('Dermaplaning', 'Esfoliação facial com lâmina.', '1h', 130, 'outros'),
+  ('Limpeza de Pele Profunda', 'Limpeza com extração e máscara.', '1h30', 150, 'outros')
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
@@ -86,6 +87,9 @@ INSERT INTO working_hours (day_of_week, open_time, close_time, is_off) VALUES
   (5, '08:00', '18:00', false), -- Sexta
   (6, '08:00', '16:00', false)  -- Sábado
 ON CONFLICT (day_of_week) DO NOTHING;
+
+-- Adicionar colunas na tabela services
+ALTER TABLE services ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'outros';
 
 -- Adicionar colunas na tabela bookings
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS cancelled_by TEXT DEFAULT NULL;
