@@ -10,14 +10,7 @@ export default function A2_Dashboard({ onLogout }) {
   const { bookings, loadData } = useBooking()
   const [filter, setFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('confirmed')
-  const [hidePast, setHidePast] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-
-  const clearFilters = () => {
-    setFilter('all')
-    setStatusFilter('confirmed')
-    setHidePast(true)
-  }
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -41,11 +34,6 @@ export default function A2_Dashboard({ onLogout }) {
 
     list.sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
 
-    if (hidePast) {
-      const todayStr = today.toISOString().split('T')[0]
-      list = list.filter((b) => b.date >= todayStr)
-    }
-
     if (filter === 'week') {
       const endOfWeek = new Date(today)
       endOfWeek.setDate(today.getDate() + (7 - today.getDay()))
@@ -54,7 +42,7 @@ export default function A2_Dashboard({ onLogout }) {
     }
 
     return groupByDate(list)
-  }, [bookings, filter, statusFilter, hidePast])
+  }, [bookings, filter, statusFilter])
 
   const stats = useMemo(() => {
     const active = bookings.filter((b) => b.status !== 'cancelled')
@@ -132,9 +120,9 @@ export default function A2_Dashboard({ onLogout }) {
 
         <div className="flex gap-2 mb-4">
           <button
-            onClick={() => { setFilter('all'); setHidePast(false) }}
+            onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              filter === 'all' && !hidePast
+              filter === 'all'
                 ? 'bg-rose text-white'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -142,32 +130,22 @@ export default function A2_Dashboard({ onLogout }) {
             Todos
           </button>
           <button
-            onClick={() => { setFilter('week'); setHidePast(false) }}
+            onClick={() => setFilter('week')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              filter === 'week' && !hidePast
+              filter === 'week'
                 ? 'bg-rose text-white'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
           >
             Esta semana
           </button>
-          <button
-            onClick={clearFilters}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              hidePast
-                ? 'bg-rose text-white'
-                : 'bg-white border border-border text-warm-gray hover:border-rose-light'
-            }`}
-          >
-            Limpar
-          </button>
         </div>
 
         <div className="flex gap-2 mb-6 flex-wrap">
           <button
-            onClick={() => { setStatusFilter('confirmed'); setHidePast(false) }}
+            onClick={() => setStatusFilter('confirmed')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'confirmed' && !hidePast
+              statusFilter === 'confirmed'
                 ? 'bg-blue-50 text-blue-600 ring-1 ring-blue-300'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -175,9 +153,9 @@ export default function A2_Dashboard({ onLogout }) {
             Confirmados
           </button>
           <button
-            onClick={() => { setStatusFilter('completed'); setHidePast(false) }}
+            onClick={() => setStatusFilter('completed')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'completed' && !hidePast
+              statusFilter === 'completed'
                 ? 'bg-success/20 text-success ring-1 ring-success/30'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -185,9 +163,9 @@ export default function A2_Dashboard({ onLogout }) {
             Concluídos
           </button>
           <button
-            onClick={() => { setStatusFilter('cancelled'); setHidePast(false) }}
+            onClick={() => setStatusFilter('cancelled')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'cancelled' && !hidePast
+              statusFilter === 'cancelled'
                 ? 'bg-error/20 text-error ring-1 ring-error/30'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
@@ -195,9 +173,9 @@ export default function A2_Dashboard({ onLogout }) {
             Cancelados
           </button>
           <button
-            onClick={() => { setStatusFilter('all'); setHidePast(false) }}
+            onClick={() => setStatusFilter('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              statusFilter === 'all' && !hidePast
+              statusFilter === 'all'
                 ? 'bg-warm-gray text-white'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
