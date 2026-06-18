@@ -139,6 +139,12 @@ export default function A2_Dashboard({ onLogout }) {
           >
             Esta semana
           </button>
+          <button
+            onClick={() => { setFilter('all'); setStatusFilter('confirmed') }}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white border border-border text-warm-gray hover:border-rose-light"
+          >
+            Limpar
+          </button>
         </div>
 
         <div className="flex gap-2 mb-6 flex-wrap">
