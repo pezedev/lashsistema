@@ -52,3 +52,30 @@ INSERT INTO services (name, description, duration, price) VALUES
   ('Manutenção', 'Renovação e ajuste dos fios existentes para manter o visual impecável.', '1h', 80),
   ('Remoção Completa', 'Remoção profissional e segura dos fios sem danificar os cílios naturais.', '1h', 60)
 ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- NOVAS TABELAS (execute após as anteriores)
+-- ============================================================
+
+-- Tabela de horários de funcionamento
+CREATE TABLE IF NOT EXISTS working_hours (
+  id SERIAL PRIMARY KEY,
+  day_of_week INTEGER NOT NULL UNIQUE CHECK (day_of_week >= 0 AND day_of_week <= 6),
+  open_time TEXT,
+  close_time TEXT,
+  is_off BOOLEAN NOT NULL DEFAULT false
+);
+
+-- Inserir horário padrão (seg-sex 08:00-18:00, sáb 08:00-16:00, dom off)
+INSERT INTO working_hours (day_of_week, open_time, close_time, is_off) VALUES
+  (0, NULL, NULL, true),   -- Domingo
+  (1, '08:00', '18:00', false), -- Segunda
+  (2, '08:00', '18:00', false), -- Terça
+  (3, '08:00', '18:00', false), -- Quarta
+  (4, '08:00', '18:00', false), -- Quinta
+  (5, '08:00', '18:00', false), -- Sexta
+  (6, '08:00', '16:00', false)  -- Sábado
+ON CONFLICT (day_of_week) DO NOTHING;
+
+-- Adicionar coluna cancelled_by na tabela bookings
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS cancelled_by TEXT DEFAULT NULL;

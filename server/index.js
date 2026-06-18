@@ -7,6 +7,7 @@ import bookingsRouter from './routes/bookings.js'
 import blockedRouter from './routes/blocked.js'
 import authRouter from './routes/auth.js'
 import clientsRouter from './routes/clients.js'
+import workingHoursRouter from './routes/workingHours.js'
 
 console.log('✓ Iniciando servidor...')
 
@@ -26,6 +27,7 @@ app.use('/api/bookings', bookingsRouter)
 app.use('/api/blocked', blockedRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/clients', clientsRouter)
+app.use('/api/working-hours', workingHoursRouter)
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' })

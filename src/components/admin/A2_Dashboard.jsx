@@ -26,6 +26,8 @@ export default function A2_Dashboard({ onLogout }) {
 
     if (statusFilter === 'cancelled') {
       list = list.filter((b) => b.status === 'cancelled')
+    } else if (statusFilter === 'completed') {
+      list = list.filter((b) => b.status === 'completed')
     } else if (statusFilter === 'confirmed') {
       list = list.filter((b) => b.status === 'confirmed')
     }
@@ -139,16 +141,26 @@ export default function A2_Dashboard({ onLogout }) {
           </button>
         </div>
 
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-wrap">
           <button
             onClick={() => setStatusFilter('confirmed')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               statusFilter === 'confirmed'
-                ? 'bg-success/20 text-success ring-1 ring-success/30'
+                ? 'bg-blue-50 text-blue-600 ring-1 ring-blue-300'
                 : 'bg-white border border-border text-warm-gray hover:border-rose-light'
             }`}
           >
             Confirmados
+          </button>
+          <button
+            onClick={() => setStatusFilter('completed')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              statusFilter === 'completed'
+                ? 'bg-success/20 text-success ring-1 ring-success/30'
+                : 'bg-white border border-border text-warm-gray hover:border-rose-light'
+            }`}
+          >
+            Concluídos
           </button>
           <button
             onClick={() => setStatusFilter('cancelled')}
@@ -195,7 +207,9 @@ export default function A2_Dashboard({ onLogout }) {
                       className={`w-full bg-white rounded-xl border p-4 text-left transition-all duration-200 group active:scale-[0.99] ${
                         appt.status === 'cancelled'
                           ? 'border-error/20 opacity-60 hover:opacity-80'
-                          : 'border-border hover:border-rose-light hover:shadow-sm hover:scale-[1.005]'
+                          : appt.status === 'completed'
+                            ? 'border-success/30 bg-success/5 hover:bg-success/10'
+                            : 'border-border hover:border-rose-light hover:shadow-sm hover:scale-[1.005]'
                       }`}
                       style={{ animationDelay: `${idx * 0.04}s` }}
                     >
@@ -213,6 +227,11 @@ export default function A2_Dashboard({ onLogout }) {
                             {appt.status === 'cancelled' && (
                               <span className="text-xs text-error bg-error/10 px-2 py-0.5 rounded-full flex-shrink-0">
                                 Cancelado
+                              </span>
+                            )}
+                            {appt.status === 'completed' && (
+                              <span className="text-xs text-success bg-success/10 px-2 py-0.5 rounded-full flex-shrink-0">
+                                Concluído
                               </span>
                             )}
                           </div>
@@ -251,6 +270,14 @@ export default function A2_Dashboard({ onLogout }) {
               className="flex-1 md:flex-none"
             >
               Bloquear Datas
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => goTo('working-hours')}
+              className="flex-1 md:flex-none"
+            >
+              Horários
             </Button>
           </div>
         </div>

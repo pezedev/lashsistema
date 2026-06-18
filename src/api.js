@@ -133,3 +133,32 @@ export async function uploadClientPhoto(id, file) {
 export function logoutAdmin() {
   localStorage.removeItem('admin_token')
 }
+
+export async function completeBooking(id) {
+  return request(`/bookings/${id}/complete`, { method: 'POST' })
+}
+
+export async function deleteClient(id) {
+  const token = localStorage.getItem('admin_token')
+  const headers = {}
+  if (token) headers['Authorization'] = `Basic ${token}`
+
+  const res = await fetch(`${API}/clients/${id}`, {
+    method: 'DELETE',
+    headers,
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error || 'Erro ao excluir conta.')
+  return data
+}
+
+export async function fetchWorkingHours() {
+  return request('/working-hours')
+}
+
+export async function saveWorkingHour(day_of_week, open_time, close_time, is_off) {
+  return request('/working-hours', {
+    method: 'POST',
+    body: JSON.stringify({ day_of_week, open_time, close_time, is_off }),
+  })
+}

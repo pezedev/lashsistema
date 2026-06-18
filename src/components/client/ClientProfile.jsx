@@ -3,6 +3,7 @@ import * as api from '../../api'
 import { PHOTO_URL } from '../../config'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
+import Modal from '../ui/Modal'
 
 export default function ClientProfile({ clientName, onBack, onExit }) {
   const [clientId, setClientId] = useState(null)
@@ -19,6 +20,8 @@ export default function ClientProfile({ clientName, onBack, onExit }) {
   const [editValue, setEditValue] = useState('')
   const fileRef = useRef(null)
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [showDelete, setShowDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -91,11 +94,19 @@ export default function ClientProfile({ clientName, onBack, onExit }) {
     }
   }
 
-  const rateLabel = (days) => {
-    if (days <= 0) return ''
-    const label = editingField === 'phone' && days > 7 ? 7 : editingField === 'email' && days > 14 ? 14 : days
-    const unit = days === 1 ? 'dia' : 'dias'
-    return `Próxima alteração em ${label} ${unit}`
+  const handleDeleteAccount = async () => {
+    if (!clientId) return
+    setDeleting(true)
+    try {
+      await api.deleteClient(clientId)
+      setShowDelete(false)
+      onExit()
+    } catch (err) {
+      setError(err.message)
+      setShowDelete(false)
+    } finally {
+      setDeleting(false)
+    }
   }
 
   const renderField = (label, fieldKey, value, placeholder, inputType, rateDays) => {
@@ -251,9 +262,53 @@ export default function ClientProfile({ clientName, onBack, onExit }) {
                 Dados salvos com sucesso!
               </div>
             )}
+
+            <div className="pt-6 mt-6 border-t border-border">
+              <button
+                onClick={() => setShowDelete(true)}
+                className="w-full py-3 rounded-xl text-sm font-medium border-2 border-error/20 text-error hover:bg-error/5 transition-all"
+              >
+                Excluir Conta
+              </button>
+              <p className="text-xs text-warm-gray-light text-center mt-2">
+                Todos os seus dados serão removidos permanentemente.
+              </p>
+            </div>
           </div>
         )}
       </main>
+
+      {showDelete && (
+        <Modal open={true} onClose={() => setShowDelete(false)} size="sm">
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-error/10 flex items-center justify-center">
+              <svg className="w-6 h-6 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            </div>
+
+            <h3 className="font-serif text-lg text-graphite mb-2">Excluir Conta?</h3>
+            <p className="text-sm text-warm-gray leading-relaxed mb-6">
+              Esta ação é <strong>irreversível</strong>. Todos os seus dados pessoais, foto e histórico
+              serão removidos permanentemente do sistema.
+            </p>
+
+            <div className="flex gap-3">
+              <Button variant="secondary" onClick={() => setShowDelete(false)} className="flex-1">
+                Cancelar
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                className="flex-1"
+              >
+                {deleting ? 'Excluindo...' : 'Sim, Excluir'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }

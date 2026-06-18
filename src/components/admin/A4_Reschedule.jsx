@@ -19,13 +19,13 @@ export default function A4_Reschedule({ appointment, onClose, onDone }) {
   const [selectedTime, setSelectedTime] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const { bookings, blockedSlots, services } = useBooking()
+  const { bookings, blockedSlots, services, workingHours } = useBooking()
 
   const monthDays = useMemo(() => getMonthDays(year, month), [year, month])
 
   const availableSlots = useMemo(() => {
     if (!selectedDate) return []
-    const slots = getAvailableSlots(selectedDate, bookings, blockedSlots, services)
+    const slots = getAvailableSlots(selectedDate, bookings, blockedSlots, services, workingHours)
     return slots.filter(
       (t) =>
         !(
@@ -123,7 +123,7 @@ export default function A4_Reschedule({ appointment, onClose, onDone }) {
           <div className="grid grid-cols-7 gap-1">
             {monthDays.map((date, i) => {
               if (!date) return <div key={`e-${i}`} />
-              const blocked = isDateBlocked(date, bookings, blockedSlots)
+              const blocked = isDateBlocked(date, bookings, blockedSlots, workingHours)
               const isSel =
                 selectedDate && date.toDateString() === selectedDate.toDateString()
               return (

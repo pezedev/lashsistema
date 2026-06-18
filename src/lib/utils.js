@@ -32,6 +32,17 @@ export const TIME_SLOTS = [
   '17:00', '17:30', '18:00',
 ]
 
+export const ALL_TIME_SLOTS = [
+  '07:00', '07:30',
+  '08:00', '08:30', '09:00', '09:30',
+  '10:00', '10:30', '11:00', '11:30',
+  '12:00', '12:30',
+  '13:00', '13:30', '14:00', '14:30',
+  '15:00', '15:30', '16:00', '16:30',
+  '17:00', '17:30', '18:00', '18:30',
+  '19:00', '19:30', '20:00',
+]
+
 export function parseDuration(dur) {
   if (!dur) return 60
   const h = (dur.match(/(\d+)h/) || [])[1]
@@ -44,20 +55,22 @@ function timeToMinutes(t) {
   return h * 60 + m
 }
 
-function minutesToTime(min) {
-  const h = Math.floor(min / 60)
-  const m = min % 60
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-}
-
-export function isDateBlocked(date, bookings, blockedSlots) {
+export function isDateBlocked(date, bookings, blockedSlots, workingHours = []) {
   const dateStr = date instanceof Date ? date.toISOString().split('T')[0] : date
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const checkDate = new Date(dateStr + 'T00:00:00')
 
   if (checkDate <= today) return true
-  if (checkDate.getDay() === 0) return true
+
+  const dayOfWeek = checkDate.getDay()
+
+  const wh = workingHours.find((w) => w.day_of_week === dayOfWeek)
+  if (wh) {
+    if (wh.is_off) return true
+  } else {
+    if (dayOfWeek === 0) return true
+  }
 
   const dayBlocked = blockedSlots.some(
     (b) => b.date === dateStr && b.time === 'all-day'
@@ -67,7 +80,17 @@ export function isDateBlocked(date, bookings, blockedSlots) {
   return false
 }
 
-export function getAvailableSlots(date, bookings, blockedSlots, services = []) {
+function getTimeSlotsForDay(openTime, closeTime) {
+  if (!openTime || !closeTime) return TIME_SLOTS
+  const start = timeToMinutes(openTime)
+  const end = timeToMinutes(closeTime)
+  return ALL_TIME_SLOTS.filter((t) => {
+    const m = timeToMinutes(t)
+    return m >= start && m < end
+  })
+}
+
+export function getAvailableSlots(date, bookings, blockedSlots, services = [], workingHours = []) {
   const dateStr = date instanceof Date ? date.toISOString().split('T')[0] : date
 
   const serviceMap = {}
@@ -83,7 +106,11 @@ export function getAvailableSlots(date, bookings, blockedSlots, services = []) {
     .filter((b) => b.date === dateStr && b.time !== 'all-day')
     .map((b) => b.time)
 
-  return TIME_SLOTS.filter((time) => {
+  const dayOfWeek = date instanceof Date ? date.getDay() : new Date(dateStr + 'T12:00:00').getDay()
+  const wh = workingHours.find((w) => w.day_of_week === dayOfWeek)
+  const timeSlots = wh ? getTimeSlotsForDay(wh.open_time, wh.close_time) : TIME_SLOTS
+
+  return timeSlots.filter((time) => {
     if (blockedTimes.includes(time)) return false
 
     const slotStart = timeToMinutes(time)
@@ -122,3 +149,8 @@ export const MONTHS = [
 ]
 
 export const DAYS_OF_WEEK = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+
+export const DAY_NAMES = [
+  'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira',
+  'Quinta-feira', 'Sexta-feira', 'Sábado',
+]

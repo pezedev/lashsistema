@@ -152,4 +152,24 @@ router.get('/by-name/:name', async (req, res) => {
   res.json(enrichWithNextChange(data))
 })
 
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params
+
+  const { data: existing } = await supabase
+    .from('clients')
+    .select('id, name')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (!existing) return res.status(404).json({ error: 'Cliente não encontrado.' })
+
+  const { error } = await supabase
+    .from('clients')
+    .delete()
+    .eq('id', id)
+
+  if (error) return res.status(500).json({ error: error.message })
+  res.json({ success: true })
+})
+
 export default router

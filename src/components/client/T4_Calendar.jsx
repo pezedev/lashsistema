@@ -18,14 +18,14 @@ export default function T4_Calendar({ booking, onUpdate, onNext, onBack }) {
     booking.date ? new Date(booking.date + 'T12:00:00') : null
   )
   const [selectedTime, setSelectedTime] = useState(booking.time || null)
-  const { bookings, blockedSlots, services } = useBooking()
+  const { bookings, blockedSlots, services, workingHours } = useBooking()
 
   const monthDays = useMemo(() => getMonthDays(year, month), [year, month])
 
   const availableSlots = useMemo(() => {
     if (!selectedDate) return []
-    return getAvailableSlots(selectedDate, bookings, blockedSlots, services)
-  }, [selectedDate, bookings, blockedSlots, services])
+    return getAvailableSlots(selectedDate, bookings, blockedSlots, services, workingHours)
+  }, [selectedDate, bookings, blockedSlots, services, workingHours])
 
   const canGoPrev =
     year > today.getFullYear() ||
@@ -55,7 +55,7 @@ export default function T4_Calendar({ booking, onUpdate, onNext, onBack }) {
 
   const handleDateClick = (date) => {
     if (!date) return
-    if (isDateBlocked(date, bookings, blockedSlots)) return
+    if (isDateBlocked(date, bookings, blockedSlots, workingHours)) return
     setSelectedDate(date)
     setSelectedTime(null)
   }
@@ -123,7 +123,7 @@ export default function T4_Calendar({ booking, onUpdate, onNext, onBack }) {
           <div className="grid grid-cols-7 gap-1">
             {monthDays.map((date, i) => {
               if (!date) return <div key={`empty-${i}`} />
-              const blocked = isDateBlocked(date, bookings, blockedSlots)
+              const blocked = isDateBlocked(date, bookings, blockedSlots, workingHours)
               const isSelected =
                 selectedDate &&
                 date.toDateString() === selectedDate.toDateString()

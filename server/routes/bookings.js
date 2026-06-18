@@ -157,7 +157,7 @@ router.post('/:id/client-cancel', async (req, res) => {
 
   const { error } = await supabase
     .from('bookings')
-    .update({ status: 'cancelled' })
+    .update({ status: 'cancelled', cancelled_by: 'client' })
     .eq('id', id)
 
   if (error) return res.status(500).json({ error: error.message })
@@ -202,7 +202,29 @@ router.post('/:id/cancel', authMiddleware, async (req, res) => {
 
   const { error } = await supabase
     .from('bookings')
-    .update({ status: 'cancelled' })
+    .update({ status: 'cancelled', cancelled_by: 'admin' })
+    .eq('id', id)
+
+  if (error) return res.status(500).json({ error: error.message })
+  res.json({ success: true })
+})
+
+router.post('/:id/complete', authMiddleware, async (req, res) => {
+  const { id } = req.params
+
+  const { data: existing } = await supabase
+    .from('bookings')
+    .select('id')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (!existing) {
+    return res.status(404).json({ error: 'Agendamento não encontrado.' })
+  }
+
+  const { error } = await supabase
+    .from('bookings')
+    .update({ status: 'completed' })
     .eq('id', id)
 
   if (error) return res.status(500).json({ error: error.message })
@@ -217,17 +239,48 @@ router.post('/:id/reschedule', authMiddleware, async (req, res) => {
     return res.status(400).json({ error: 'Data e horário são obrigatórios.' })
   }
 
-  const { data: conflict } = await supabase
+  const { data: bookingData } = await supabase
     .from('bookings')
-    .select('id')
-    .eq('date', date)
-    .eq('time', time)
-    .neq('id', id)
-    .neq('status', 'cancelled')
+    .select('service')
+    .eq('id', id)
     .maybeSingle()
 
-  if (conflict) {
-    return res.status(409).json({ error: 'Horário indisponível.' })
+  if (!bookingData) {
+    return res.status(404).json({ error: 'Agendamento não encontrado.' })
+  }
+
+  const { data: svcData } = await supabase
+    .from('services')
+    .select('duration')
+    .eq('name', bookingData.service)
+    .maybeSingle()
+
+  const durMin = parseDuration(svcData?.duration || '1h')
+  const newStart = timeToMinutes(time)
+  const newEnd = newStart + durMin
+
+  const { data: existing } = await supabase
+    .from('bookings')
+    .select('id, time, service')
+    .eq('date', date)
+    .neq('id', id)
+    .neq('status', 'cancelled')
+
+  if (existing) {
+    const allServices = {}
+    const { data: svcList } = await supabase.from('services').select('name, duration')
+    if (svcList) {
+      for (const s of svcList) allServices[s.name] = s.duration
+    }
+
+    for (const b of existing) {
+      const bDur = parseDuration(allServices[b.service] || '1h')
+      const bStart = timeToMinutes(b.time)
+      const bEnd = bStart + bDur
+      if (newStart < bEnd && bStart < newEnd) {
+        return res.status(409).json({ error: 'Horário indisponível.' })
+      }
+    }
   }
 
   const { data, error } = await supabase

@@ -15,6 +15,7 @@ export function BookingProvider({ children }) {
   const [bookings, setBookings] = useState([])
   const [blockedSlots, setBlockedSlots] = useState([])
   const [services, setServices] = useState([])
+  const [workingHours, setWorkingHours] = useState([])
   const [bookingError, setBookingError] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -27,7 +28,6 @@ export function BookingProvider({ children }) {
       setBookings(Array.isArray(b) ? b : [])
       setBlockedSlots(Array.isArray(bl) ? bl : [])
     } catch {
-      // silently fail on background refresh
     }
   }, [])
 
@@ -36,17 +36,25 @@ export function BookingProvider({ children }) {
       const s = await api.fetchServices()
       setServices(Array.isArray(s) ? s : [])
     } catch {
-      // services loaded from fallback if API fails
+    }
+  }, [])
+
+  const loadWorkingHours = useCallback(async () => {
+    try {
+      const wh = await api.fetchWorkingHours()
+      setWorkingHours(Array.isArray(wh) ? wh : [])
+    } catch {
     }
   }, [])
 
   useEffect(() => {
     loadData()
     loadServices()
+    loadWorkingHours()
 
     const interval = setInterval(loadData, 30000)
     return () => clearInterval(interval)
-  }, [loadData, loadServices])
+  }, [loadData, loadServices, loadWorkingHours])
 
   const initializeFromLogin = useCallback(() => {
     setStep(1)
@@ -78,7 +86,7 @@ export function BookingProvider({ children }) {
     setLoading(true)
     setBookingError(null)
     try {
-      const result = await api.createBooking({
+      await api.createBooking({
         name: booking.name,
         phone: booking.phone,
         service: booking.service,
@@ -114,6 +122,7 @@ export function BookingProvider({ children }) {
     bookings,
     blockedSlots,
     services,
+    workingHours,
     bookingError,
     loading,
     initializeFromLogin,

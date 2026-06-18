@@ -33,7 +33,7 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
       if (d >= now && b.status === 'confirmed') up.push(b)
       else pa.push(b)
     }
-    return { upcoming: up, past: pa }
+    return { upcoming: up, past: pa.sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time)) }
   }, [bookings])
 
   const handleCancel = async () => {
@@ -56,6 +56,7 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
     switch (status) {
       case 'confirmed': return 'text-success bg-success/10'
       case 'cancelled': return 'text-error bg-error/10'
+      case 'completed': return 'text-blue-600 bg-blue-50'
       default: return 'text-warm-gray bg-warm-gray-light/10'
     }
   }
@@ -165,7 +166,7 @@ export default function ClientHistory({ clientName, onBack, onExit }) {
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-medium text-graphite">{b.service}</span>
                             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusTag(b.status)}`}>
-                              {b.status === 'cancelled' ? 'Cancelado' : 'Realizado'}
+                              {b.status === 'cancelled' ? 'Cancelado' : b.status === 'completed' ? 'Concluído' : 'Realizado'}
                             </span>
                           </div>
                           <div className="flex items-center gap-4 mt-1 text-sm text-warm-gray">
