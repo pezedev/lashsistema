@@ -59,7 +59,7 @@ export default function A1_Login() {
       </div>
 
       <p className="text-warm-gray-light text-xs mt-8">
-        Painel Administrativo — Camille Lash Designer
+        Painel Administrativo — Camille Santos Beauty
       </p>
     </div>
   )

@@ -60,7 +60,7 @@ export default function UnifiedLogin({ onLogin }) {
 
       <div className="text-center pb-6 relative">
         <p className="text-warm-gray-light text-xs">
-          Camille Lash Designer — Atendimento em casa
+          Camille Santos Beauty — Atendimento em casa
         </p>
       </div>
     </div>

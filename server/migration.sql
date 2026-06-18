@@ -49,8 +49,14 @@ INSERT INTO services (name, description, duration, price) VALUES
   ('Volume Brasileiro', 'Fios híbridos que combinam volume e leveza, realçando o olhar com naturalidade.', '1h30', 120),
   ('Volume Russo', 'Técnica clássica que proporciona volume máximo com fios ultrafinos e sedosos.', '2h', 150),
   ('Mega Volume', 'Extremo volume e glamour para ocasiões especiais. Fios extra finos em leques.', '2h30', 180),
-  ('Manutenção', 'Renovação e ajuste dos fios existentes para manter o visual impecável.', '1h', 80),
-  ('Remoção Completa', 'Remoção profissional e segura dos fios sem danificar os cílios naturais.', '1h', 60)
+  ('Manutenção de Cílios', 'Renovação e ajuste dos fios existentes para manter o visual impecável.', '1h', 80),
+  ('Remoção Completa', 'Remoção profissional e segura dos fios sem danificar os cílios naturais.', '1h', 60),
+  ('Design de Sobrancelha', 'Modelagem personalizada que valoriza o formato do seu rosto.', '1h', 50),
+  ('Brow Lamination', 'Henação e alinhamento dos fios para sobrancelhas perfeitas.', '1h', 70),
+  ('Limpeza de Pele', 'Limpeza profunda com extração e máscara revitalizante.', '1h30', 90),
+  ('Nanolips', 'Preenchimento labial sutil com ácido hialurônico.', '1h', 180),
+  ('Glow Lips', 'Hidratação e revitalização labial com efeito glow.', '1h', 60),
+  ('Dermaplaning', 'Esfoliação facial com lâmina para remoção de pelos e células mortas.', '1h', 100)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================

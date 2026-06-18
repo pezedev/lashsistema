@@ -10,9 +10,9 @@ export default function T1_Welcome({ onStart }) {
         </div>
 
         <p className="text-warm-gray text-center text-base md:text-lg leading-relaxed max-w-xs mt-4 mb-10 animate-slide-up">
-          Realce a beleza do seu olhar
+          Realce sua beleza com quem
           <br />
-          com quem entende de cílios.
+          entende de estética.
         </p>
 
         {/* Substituir pela logo oficial da cliente aqui — src="/assets/logo.png" */}
@@ -25,7 +25,7 @@ export default function T1_Welcome({ onStart }) {
       </div>
 
       <p className="text-warm-gray-light text-xs text-center mt-8">
-        Camille Lash Designer — Atendimento em casa
+        Camille Santos Beauty — Atendimento em casa
       </p>
     </div>
   )

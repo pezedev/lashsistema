@@ -31,7 +31,7 @@ export async function notifyBookingConfirmed(name, email, service, date, time, p
   if (!email) return
   await sendEmail({
     to: email,
-    subject: 'Agendamento Confirmado — Camille Lash Designer',
+    subject: 'Agendamento Confirmado — Camille Santos Beauty',
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;">
         <h2 style="color:#b76e79;">Agendamento Confirmado!</h2>
@@ -52,7 +52,7 @@ export async function notifyBookingCancelledByAdmin(name, email, service, date, 
   if (!email) return
   await sendEmail({
     to: email,
-    subject: 'Agendamento Cancelado — Camille Lash Designer',
+    subject: 'Agendamento Cancelado — Camille Santos Beauty',
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;">
         <h2 style="color:#b76e79;">Agendamento Cancelado</h2>
@@ -63,7 +63,7 @@ export async function notifyBookingCancelledByAdmin(name, email, service, date, 
           <tr><td style="padding:8px;border:1px solid #e5e5e5;color:#666;">Horário</td><td style="padding:8px;border:1px solid #e5e5e5;font-weight:600;">${time}</td></tr>
         </table>
         <p>Peço desculpas pelo transtorno. Se desejar, podemos remarcar um novo horário.</p>
-        <p style="color:#999;font-size:13px;">Camille Lash Designer — Atendimento em casa</p>
+        <p style="color:#999;font-size:13px;">Camille Santos Beauty — Atendimento em casa</p>
       </div>
     `,
   })
@@ -92,7 +92,7 @@ export async function notifyBookingCancelledByClient(name, email, service, date,
   if (email) {
     await sendEmail({
       to: email,
-      subject: 'Cancelamento Confirmado — Camille Lash Designer',
+      subject: 'Cancelamento Confirmado — Camille Santos Beauty',
       html: `
         <p>Olá <strong>${name}</strong>, seu agendamento foi cancelado conforme solicitado.</p>
         <p>Se precisar de um novo horário, é só acessar o sistema.</p>

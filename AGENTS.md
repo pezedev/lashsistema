@@ -1,4 +1,4 @@
-# Cílios - Lash Designer Camille
+# Camille Santos Beauty
 
 ## Stack
 - **Frontend:** React 19 + Vite + Tailwind 3, port 5173

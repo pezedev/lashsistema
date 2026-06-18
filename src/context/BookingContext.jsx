@@ -101,7 +101,7 @@ export function BookingProvider({ children }) {
             type: 'booking_confirmed',
             whatsapp: booking.phone,
             sms: booking.phone,
-            message: `Olá ${booking.name}, seu agendamento na Camille Lash Designer foi confirmado!\n\nServiço: ${booking.service?.name}\nData: ${booking.date}\nHorário: ${booking.time}\nValor: R$ ${booking.service?.price},00\n\nObrigada! 💕`,
+            message: `Olá ${booking.name}, seu agendamento na Camille Santos Beauty foi confirmado!\n\nServiço: ${booking.service?.name}\nData: ${booking.date}\nHorário: ${booking.time}\nValor: R$ ${booking.service?.price},00\n\nObrigada! 💕`,
           },
         })
       )
