@@ -1,4 +1,5 @@
-💄 Lash System - Aesthetic Scheduling System
+# 💄 Lash System - Aesthetic Scheduling System
+
 O Lash System é um ecossistema de agendamento e gestão desenvolvido para profissionais de estética especializada (cílios, sobrancelhas, peeling e cuidados faciais). Desenvolvido para fins acadêmicos, o sistema foca na simplificação da jornada da cliente, no controle eficiente de horários e em uma experiência de usuário (UX) fluida e intuitiva.
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
