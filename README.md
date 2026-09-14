@@ -29,7 +29,7 @@ O projeto foi estruturado seguindo as melhores práticas de Engenharia de Softwa
 ## 🚀 Como Executar
 Para rodar este projeto localmente e ver a mágica do TypeScript:
 
-Bash
+``` Bash
 # 1. Clone o repositório
 git clone https://github.com/pezedev/lash-system.git
 
